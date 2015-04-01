@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Ashare</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_text">Android 技術分享</string>
+    <string name="document_text">參考文件</string>
+    <string name="demo_apk_text">Demo APK</string>
+
+</resources>

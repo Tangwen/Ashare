@@ -36,6 +36,7 @@ public class ShareDetail {
         this.documentUrl = documentUrl;
         this.apkUrl = apkUrl;
         this.picUrlArray = picUrl;
+        this.shareClass.add(ShareClassType.ALL);
     }
 
     public ArrayList<ShareClassType> getShareClass() {

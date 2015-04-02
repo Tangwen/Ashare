@@ -1,84 +1,123 @@
 package com.twm.pt.ashare.ashare;
 
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.DisplayMetrics;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
 import com.twm.pt.ashare.ashare.Adapter.MyAdapter;
-import com.twm.pt.ashare.ashare.Adapter.PicAdapter;
+import com.twm.pt.ashare.ashare.component.ShareClassType;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    private Toolbar mToolbar;
+    private DrawerLayout layDrawer;
     private RecyclerView mRecyclerView;
-//    private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
-    private ImageView mImageView;
+    private ListView mListView;
     private MyAdapter mAdapter;
-//    private LinearLayoutManager mLayoutManager;
+    private ActionBarDrawerToggle drawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle, mTitleTemp;
+
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        mContext = this;
+
+        initDrawerLayout();
+        initDrawerList();
+        initContentLayout();
+    }
+
+
+
+    private void initDrawerLayout(){
         setContentView(R.layout.activity_main);
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        mImageView = (ImageView) findViewById(R.id.test_image);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        layDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mRecyclerView = (RecyclerView) findViewById(R.id.share_list_recycler_view);
+        mListView = (ListView) findViewById(R.id.left_list_view);
+        mTitle = mTitleTemp = getResources().getString(R.string.title_text);
+        mDrawerTitle = getResources().getString(R.string.drawer_Title);
+        mToolbar.setTitle(mTitle);
+
+        drawerToggle = new ActionBarDrawerToggle(
+                this,
+                layDrawer,
+                mToolbar,
+                R.string.drawer_open,
+                R.string.drawer_close) {
+
+            @Override
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                mToolbar.setTitle(mTitle);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                mToolbar.setTitle(mDrawerTitle);
+            }
+        };
+        drawerToggle.syncState();
+
+        layDrawer.setDrawerListener(drawerToggle);
+    }
+
+    private void initDrawerList() {
+//        String[] drawer_menu = this.getResources().getStringArray(R.array.drawer_menu);
+        String[] drawer_menu = ShareClassType.getStringNames();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawer_menu);
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mTitle = mTitleTemp + "(" + (adapterView.getItemAtPosition(i).toString()) + ")";
+                ShareClassType shareClassType = ShareClassType.lookup(adapterView.getItemAtPosition(i).toString());
+                mAdapter.setShareDetailArray(ShareDoc.getInstance().getShareDetailArray(shareClassType));
+                mAdapter.notifyDataSetChanged();
+                layDrawer.closeDrawers();
+            }
+        });
+    }
 
 
-//        mImageView.setDrawingCacheEnabled(true);
-//        DisplayMetrics dm = this.getResources().getDisplayMetrics();
-//        new ImageViewHelper(dm, mImageView, null).setBitmapWidthHeight(576,72);
+    private void initContentLayout() {
 
-//        Picasso.with(getApplicationContext()).load("http://pagead2.googlesyndication.com/simgad/17966329567249548074").into(mImageView);
-//        Picasso.with(getApplicationContext()).load("http://www.cadtc.com.tw/blog/uploads/02-android-vs-ios.jpg").into(mImageView);
-//        Picasso.with(getApplicationContext()).load("http://static.webhek.com/techug-res/uploads/2015/02/learn-android-development.jpg").into(mImageView);
-        Picasso.with(getApplicationContext()).load("http://t1.gstatic.com/images?q=tbn:ANd9GcT_PPy7gnJBYKwnGJl16UQRZFvKUq6PenzvQoLzxRkeelIIOVge").into(mImageView);
-
-
-
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
-        // use a linear layout manager
-//        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-//        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-//        mRecyclerView.setLayoutManager(mLayoutManager);
         StaggeredGridLayoutManager mStaggeredGridLayoutManager =new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
 
-
-        // specify an adapter (see also next example)
         mAdapter = new MyAdapter(this, ShareDoc.getInstance().getShareDetailArray());
         mAdapter.addOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(view.getContext(), "position = " + view.getTag(), Toast.LENGTH_SHORT).show();
-                //Intent in = new Intent(getApplicationContext(),DetailPage.class);
-                //startActivity(in);
                 try {
                     int pos = (int)view.getTag();
-                    //mRecyclerView.smoothScrollToPosition(pos);
-                    //mStaggeredGridLayoutManager.scrollToPosition(pos);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-
-//        StaggeredGridLayoutManager mStaggeredGridLayoutManager =new StaggeredGridLayoutManager(1, LinearLayoutManager.HORIZONTAL);
-//        mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
-//        mAdapter = new PicAdapter(this, ShareDoc.getInstance().getShareDetailArray().get(0).picUrlArray);
-//        mRecyclerView.setAdapter(mAdapter);
     }
 
 

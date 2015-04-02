@@ -199,4 +199,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void addOnClickListener(View.OnClickListener mListener) {
         this.mListener.add(mListener);
     }
+
+    public void setShareDetailArray(ArrayList<ShareDetail> shareDetailArray) {
+        this.shareDetailArray = shareDetailArray;
+    }
 }

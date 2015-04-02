@@ -6,5 +6,18 @@
     <string name="title_text">Android 技術分享</string>
     <string name="document_text">參考文件</string>
     <string name="demo_apk_text">Demo APK</string>
+    <string name="drawer_Title">分類</string>
 
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+
+    <string-array name="drawer_menu">
+        <item>全部</item>
+        <item>工具</item>
+        <item>安全</item>
+        <item>介面</item>
+        <item>效能</item>
+        <item>功能</item>
+    </string-array>
 </resources>

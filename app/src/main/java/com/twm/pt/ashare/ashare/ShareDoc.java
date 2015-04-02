@@ -1,5 +1,6 @@
 package com.twm.pt.ashare.ashare;
 
+import com.twm.pt.ashare.ashare.component.ShareClassType;
 import com.twm.pt.ashare.ashare.component.ShareDetail;
 
 import java.util.ArrayList;
@@ -38,6 +39,21 @@ public class ShareDoc {
         return shareDetailArray;
     }
 
+    public ArrayList<ShareDetail> getShareDetailArray(ShareClassType shareClassType) {
+        ArrayList<ShareDetail> shareDetailArray = new ArrayList<ShareDetail>();
+        ArrayList<ShareDetail> shareDetailArrayTemp = getShareDetailArray();
+        if(shareClassType==null) {
+            return shareDetailArrayTemp;
+        }
+        for(ShareDetail shareDetail: shareDetailArrayTemp) {
+            if(shareDetail.shareClass.contains(shareClassType)) {
+                shareDetailArray.add(shareDetail);
+            }
+        }
+        return shareDetailArray;
+    }
+
+
     private ShareDetail getMProjectIssuesLessonsLearned() {
         String itemName = "M+ Project issues Lessons Learned";
         String shareName = "Sometimes Li";
@@ -50,6 +66,31 @@ public class ShareDoc {
         String apkUrl = null;
         ArrayList<String> picUrl = new ArrayList<String>();
         ShareDetail shareDetail = new ShareDetail(itemName, shareName, sharePicUrl, shareDate, description, documentUrl, apkUrl, picUrl);
+        shareDetail.addShareClass(ShareClassType.FUNCTIONS);
+        shareDetail.addShareClass(ShareClassType.PERFORMANCE);
+
+        return shareDetail;
+    }
+
+
+
+
+
+    private ShareDetail getDynamicAnalyzingSystem() {
+        String itemName = "Malicious Android AppDynamic Analyzing System";
+        String shareName = "Brent";
+        String sharePicUrl = "http://www.blogcdn.com/www.engadget.com/media/2011/03/market-bag-gun.jpg";
+        String shareDate = "2015/03";
+        String description = "藉由重新編譯過的ROM，針對APP進行動態分析，查看是否存在惡意資訊";
+        String documentUrl = "http://www.slideshare.net/erinus/android-security-development-45870056";
+        String apkUrl = null;
+        ArrayList<String> picUrl = new ArrayList<String>();
+        picUrl.add("http://image.slidesharecdn.com/androidsecuritydevelopment-150315222311-conversion-gate01/95/android-security-development-part-2-malicious-android-appdynamic-analyzing-system-1-638.jpg?cb=1426476332");
+        picUrl.add("http://image.slidesharecdn.com/androidsecuritydevelopment-150315222311-conversion-gate01/95/android-security-development-part-2-malicious-android-appdynamic-analyzing-system-24-638.jpg?cb=1426476332");
+        picUrl.add("http://image.slidesharecdn.com/androidsecuritydevelopment-150315222311-conversion-gate01/95/android-security-development-part-2-malicious-android-appdynamic-analyzing-system-49-638.jpg?cb=1426476332");
+        ShareDetail shareDetail = new ShareDetail(itemName, shareName, sharePicUrl, shareDate, description, documentUrl, apkUrl, picUrl);
+        shareDetail.addShareClass(ShareClassType.TOOLS);
+        shareDetail.addShareClass(ShareClassType.SAFE);
 
         return shareDetail;
     }
@@ -75,30 +116,12 @@ public class ShareDoc {
         picUrl.add("https://camo.githubusercontent.com/0a791ff6de887022f555df0b4ee8bb1bb9adaa0f/68747470733a2f2f7261772e6769746875622e636f6d2f6279646176792f616e64726f69642d706172616c6c61782d6578616d706c652f6d61737465722f70726573656e746174696f6e2f73637265656e73686f745f312e706e67");
         picUrl.add("https://camo.githubusercontent.com/87bb05fc1396760c3c5a7df94ac0bae6e3c020e1/68747470733a2f2f7261772e6769746875622e636f6d2f6279646176792f616e64726f69642d706172616c6c61782d6578616d706c652f6d61737465722f70726573656e746174696f6e2f73637265656e73686f745f322e706e67");
         picUrl.add("http://nineoldandroids.com/screens.png");
+        shareDetail.addShareClass(ShareClassType.TOOLS);
+        shareDetail.addShareClass(ShareClassType.UI);
 
         return shareDetail;
     }
 
-
-
-
-
-    private ShareDetail getDynamicAnalyzingSystem() {
-        String itemName = "Malicious Android AppDynamic Analyzing System";
-        String shareName = "Brent";
-        String sharePicUrl = "http://www.blogcdn.com/www.engadget.com/media/2011/03/market-bag-gun.jpg";
-        String shareDate = "2015/03";
-        String description = "藉由重新編譯過的ROM，針對APP進行動態分析，查看是否存在惡意資訊";
-        String documentUrl = "http://www.slideshare.net/erinus/android-security-development-45870056";
-        String apkUrl = null;
-        ArrayList<String> picUrl = new ArrayList<String>();
-        picUrl.add("http://image.slidesharecdn.com/androidsecuritydevelopment-150315222311-conversion-gate01/95/android-security-development-part-2-malicious-android-appdynamic-analyzing-system-1-638.jpg?cb=1426476332");
-        picUrl.add("http://image.slidesharecdn.com/androidsecuritydevelopment-150315222311-conversion-gate01/95/android-security-development-part-2-malicious-android-appdynamic-analyzing-system-24-638.jpg?cb=1426476332");
-        picUrl.add("http://image.slidesharecdn.com/androidsecuritydevelopment-150315222311-conversion-gate01/95/android-security-development-part-2-malicious-android-appdynamic-analyzing-system-49-638.jpg?cb=1426476332");
-        ShareDetail shareDetail = new ShareDetail(itemName, shareName, sharePicUrl, shareDate, description, documentUrl, apkUrl, picUrl);
-
-        return shareDetail;
-    }
 
 
     private ShareDetail getShareDetail_AndEngine() {
@@ -114,6 +137,9 @@ public class ShareDoc {
         picUrl.add("https://lh6.ggpht.com/zmCTAfkUtJg_ySgNPCHNlDRtK8QYqMiBmJHR23ptKxjHWL4uNyF7X0_xh6NvBO6wndY=h310-rw");
         picUrl.add("https://lh4.ggpht.com/7uO0AxYwaa_2q8AF2Dyq5PPxabRQ0zB8R1-q9x_7ieEyIH_2KYdkkk04iXbmmRzu73U=h310-rw");
         ShareDetail shareDetail = new ShareDetail(itemName, shareName, sharePicUrl, shareDate, description, documentUrl, apkUrl, picUrl);
+        shareDetail.addShareClass(ShareClassType.TOOLS);
+        shareDetail.addShareClass(ShareClassType.UI);
+        shareDetail.addShareClass(ShareClassType.PERFORMANCE);
 
         return shareDetail;
     }
@@ -130,6 +156,8 @@ public class ShareDoc {
         ArrayList<String> picUrl = new ArrayList<String>();
         picUrl.add("https://software.intel.com/sites/default/files/8878-f1.jpg");
         ShareDetail shareDetail = new ShareDetail(itemName, shareName, sharePicUrl, shareDate, description, documentUrl, apkUrl, picUrl);
+        shareDetail.addShareClass(ShareClassType.TOOLS);
+        shareDetail.addShareClass(ShareClassType.PERFORMANCE);
 
         return shareDetail;
     }

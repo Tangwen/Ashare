@@ -5,51 +5,91 @@ package com.twm.pt.ashare.ashare.component;
  */
 public enum ShareClassType {
 
+    /** 全部 */
+    ALL("全部 "),
     /** 工具 */
-    TOOLS(0),
+    TOOLS("工具 "),
     /** 安全 */
-    SAFE(1),
+    SAFE("安全"),
     /** 介面 */
-    UI(2),
+    UI("介面"),
     /** 效能 */
-    PERFORMANCE(3);
+    PERFORMANCE("效能 "),
+    /** 功能 */
+    FUNCTIONS("功能 "),
+    ;
 
-    int value;
+    String value;
 
-    ShareClassType(int value) {
+    ShareClassType(String value) {
         this.value = value;
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
     }
 
-    public static ShareClassType lookup(final int value) {
+//    public static ShareClassType lookup(final int value) {
+//        ShareClassType type = null;
+//        for (ShareClassType type1 : ShareClassType.values()) {
+//            if (value == type1.getValue() ) {
+//                type = type1;
+//                break;
+//            }
+//        }
+//        return type;
+//    }
+
+//    public static ShareClassType lookup(final String valueString) {
+//        try {
+//            int value = Integer.parseInt(valueString);
+//            return lookup(value);
+//        } catch (Exception e) {
+//            ShareClassType type = null;
+//            if(valueString!=null) {
+//                for (ShareClassType type1 : ShareClassType.values()) {
+//                    if (type1.toString().equalsIgnoreCase(valueString) ) {
+//                        type = type1;
+//                        break;
+//                    }
+//                }
+//            }
+//            return type;
+//        }
+//    }
+
+    public static ShareClassType lookup(final String valueString) {
         ShareClassType type = null;
-        for (ShareClassType type1 : ShareClassType.values()) {
-            if (value == type1.getValue() ) {
-                type = type1;
-                break;
+        if (valueString != null) {
+            for (ShareClassType type1 : ShareClassType.values()) {
+                if (type1.getValue().equalsIgnoreCase(valueString)) {
+                    type = type1;
+                    break;
+                }
             }
         }
         return type;
     }
 
-    public static ShareClassType lookup(final String valueString) {
-        try {
-            int value = Integer.parseInt(valueString);
-            return lookup(value);
-        } catch (Exception e) {
-            ShareClassType type = null;
-            if(valueString!=null) {
-                for (ShareClassType type1 : ShareClassType.values()) {
-                    if (type1.toString().equalsIgnoreCase(valueString) ) {
-                        type = type1;
-                        break;
-                    }
-                }
-            }
-            return type;
+    public static String[] names() {
+        ShareClassType[] data = values();
+        String[] names = new String[data.length];
+
+        for (int i = 0; i < data.length; i++) {
+            names[i] = data[i].name();
         }
+
+        return names;
+    }
+
+    public static String[] getStringNames() {
+        ShareClassType[] data = values();
+        String[] names = new String[data.length];
+
+        for (int i = 0; i < data.length; i++) {
+            names[i] = data[i].getValue();
+        }
+
+        return names;
     }
 }

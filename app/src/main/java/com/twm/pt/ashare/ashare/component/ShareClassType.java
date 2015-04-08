@@ -29,34 +29,6 @@ public enum ShareClassType {
         return value;
     }
 
-//    public static ShareClassType lookup(final int value) {
-//        ShareClassType type = null;
-//        for (ShareClassType type1 : ShareClassType.values()) {
-//            if (value == type1.getValue() ) {
-//                type = type1;
-//                break;
-//            }
-//        }
-//        return type;
-//    }
-
-//    public static ShareClassType lookup(final String valueString) {
-//        try {
-//            int value = Integer.parseInt(valueString);
-//            return lookup(value);
-//        } catch (Exception e) {
-//            ShareClassType type = null;
-//            if(valueString!=null) {
-//                for (ShareClassType type1 : ShareClassType.values()) {
-//                    if (type1.toString().equalsIgnoreCase(valueString) ) {
-//                        type = type1;
-//                        break;
-//                    }
-//                }
-//            }
-//            return type;
-//        }
-//    }
 
     public static ShareClassType lookup(final String valueString) {
         ShareClassType type = null;

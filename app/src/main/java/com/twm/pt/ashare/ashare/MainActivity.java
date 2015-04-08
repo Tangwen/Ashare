@@ -2,6 +2,8 @@ package com.twm.pt.ashare.ashare;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,10 +17,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.twm.pt.ashare.ashare.Adapter.MyAdapter;
 import com.twm.pt.ashare.ashare.component.ShareClassType;
+import com.twm.pt.ashare.ashare.component.ShareDetail;
+import com.twm.pt.ashare.ashare.utility.L;
+
+import java.util.ArrayList;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -106,7 +115,8 @@ public class MainActivity extends ActionBarActivity {
         StaggeredGridLayoutManager mStaggeredGridLayoutManager =new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
 
-        mAdapter = new MyAdapter(this, ShareDoc.getInstance().getShareDetailArray());
+//        mAdapter = new MyAdapter(this, ShareDoc.getInstance().getShareDetailArray());
+        mAdapter = new MyAdapter(this,  new ArrayList<ShareDetail>());
         mAdapter.addOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +128,84 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+
+//        getShareDetailArray_thread.start();
+        getShareDetailArray_thread_cb.start();
     }
+
+
+    //要開thread呼叫網路資料不然4.0以後，會回NetworkOnMainThreadException
+    Thread getShareDetailArray_thread = new Thread(new Runnable(){
+        @Override
+        public void run() {
+            try {
+//                    ArrayList<ShareDetail> shareDetailArray = ShareDoc.getInstance().getShareDetailArray();
+                ArrayList<ShareDetail> shareDetailArray = ShareDoc.getInstance().getShareDetailArray_GET();
+                if(shareDetailArray!=null) {
+                    L.d("shareDetailArray size = " + shareDetailArray.size());
+                    mAdapter.setShareDetailArray(shareDetailArray);
+
+                    Message msg = new Message();
+                    Bundle data = new Bundle();
+//                        data.putInt("value", shareDetailArray.size());
+                    msg.setData(data);
+                    handler_mAdapter_notifyDataSetChanged.sendMessage(msg);
+                } else {
+                    L.d("shareDetailArray is null");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    });
+
+    //要開thread呼叫網路資料不然4.0以後，會回NetworkOnMainThreadException
+    Thread getShareDetailArray_thread_cb = new Thread(new Runnable(){
+        @Override
+        public void run() {
+            try {
+//                    ArrayList<ShareDetail> shareDetailArray = ShareDoc.getInstance().getShareDetailArray();
+                ShareDoc.getInstance().getShareDetailArray_GETcb(new Callback<ArrayList<ShareDetail>>() {
+                    @Override
+                    public void success(ArrayList<ShareDetail> shareDetailArray, Response response) {
+                        if (shareDetailArray == null) {
+                            shareDetailArray = new ArrayList<ShareDetail>();
+                        }
+                        ShareDoc.appShareObjectJSONString = ShareDoc.getInstance().ObjectToJSONString(shareDetailArray);
+                        if(shareDetailArray!=null) {
+                            L.d("callback shareDetailArray size = " + shareDetailArray.size());
+                            mAdapter.setShareDetailArray(shareDetailArray);
+
+                            Message msg = new Message();
+                            Bundle data = new Bundle();
+                            msg.setData(data);
+                            handler_mAdapter_notifyDataSetChanged.sendMessage(msg);
+                        } else {
+                            L.d("shareDetailArray is null");
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    });
+
+    Handler handler_mAdapter_notifyDataSetChanged = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+//            Bundle data = msg.getData();
+//            String val = data.getString("value");
+            mAdapter.notifyDataSetChanged();
+        }
+    };
 
 
     @Override

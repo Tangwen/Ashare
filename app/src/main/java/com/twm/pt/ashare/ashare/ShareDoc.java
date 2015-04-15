@@ -74,7 +74,7 @@ public class ShareDoc {
         //http://111.254.96.17:7070/webapps/ashare/appShareObjectJSONString.json
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint("http://111.254.96.17:7070")
+                .setEndpoint("http://wind256.ddns.net:7070")
                 .build();
         ShareDataService service = restAdapter.create(ShareDataService.class);
 
@@ -89,7 +89,7 @@ public class ShareDoc {
         //http://111.254.96.17:7070/webapps/ashare/appShareObjectJSONString.json
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint("http://111.254.96.17:7070")
+                .setEndpoint("http://wind256.ddns.net:7070")
                 .build();
         ShareDataService service = restAdapter.create(ShareDataService.class);
 

@@ -37,17 +37,29 @@ public class MainActivity extends ActionBarActivity {
     private RecyclerView mRecyclerView;
     private ListView mListView;
     private MyAdapter mAdapter;
-    private ActionBarDrawerToggle drawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle, mTitleTemp;
 
-    private Context mContext;
+    Handler handler_mAdapter_notifyDataSetChanged = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+//            Bundle data = msg.getData();
+//            String val = data.getString("value");
+            mAdapter.notifyDataSetChanged();
+        }
+    };
+
+    public MainActivity() {
+    }
+
+    //private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        mContext = this;
+//        mContext = this;
 
         initDrawerLayout();
         initDrawerList();
@@ -67,7 +79,7 @@ public class MainActivity extends ActionBarActivity {
         mDrawerTitle = getResources().getString(R.string.drawer_Title);
         mToolbar.setTitle(mTitle);
 
-        drawerToggle = new ActionBarDrawerToggle(
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this,
                 layDrawer,
                 mToolbar,
@@ -94,7 +106,7 @@ public class MainActivity extends ActionBarActivity {
     private void initDrawerList() {
 //        String[] drawer_menu = this.getResources().getStringArray(R.array.drawer_menu);
         String[] drawer_menu = ShareClassType.getStringNames();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawer_menu);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.drawer_list_item, drawer_menu);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -120,11 +132,11 @@ public class MainActivity extends ActionBarActivity {
         mAdapter.addOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    int pos = (int)view.getTag();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    int pos = (int)view.getTag();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -132,6 +144,7 @@ public class MainActivity extends ActionBarActivity {
 //        getShareDetailArray_thread.start();
         getShareDetailArray_thread_cb.start();
     }
+
 
 
     //要開thread呼叫網路資料不然4.0以後，會回NetworkOnMainThreadException
@@ -169,7 +182,7 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void success(ArrayList<ShareDetail> shareDetailArray, Response response) {
                         if (shareDetailArray == null) {
-                            shareDetailArray = new ArrayList<ShareDetail>();
+                            shareDetailArray = new ArrayList<>();
                         }
                         ShareDoc.appShareObjectJSONString = ShareDoc.getInstance().ObjectToJSONString(shareDetailArray);
                         if(shareDetailArray!=null) {
@@ -196,16 +209,6 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     });
-
-    Handler handler_mAdapter_notifyDataSetChanged = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-//            Bundle data = msg.getData();
-//            String val = data.getString("value");
-            mAdapter.notifyDataSetChanged();
-        }
-    };
 
 
     @Override

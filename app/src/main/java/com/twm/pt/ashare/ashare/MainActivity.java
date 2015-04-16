@@ -1,6 +1,7 @@
 package com.twm.pt.ashare.ashare;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.twm.pt.ashare.ashare.Adapter.MyAdapter;
+import com.twm.pt.ashare.ashare.Adapter.ShareListAdapter;
 import com.twm.pt.ashare.ashare.component.ShareClassType;
 import com.twm.pt.ashare.ashare.component.ShareDetail;
 import com.twm.pt.ashare.ashare.utility.L;
@@ -36,9 +38,10 @@ public class MainActivity extends ActionBarActivity {
     private DrawerLayout layDrawer;
     private RecyclerView mRecyclerView;
     private ListView mListView;
-    private MyAdapter mAdapter;
+    private ShareListAdapter mAdapter;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle, mTitleTemp;
+    private Context mContext;
 
     Handler handler_mAdapter_notifyDataSetChanged = new Handler() {
         @Override
@@ -53,14 +56,12 @@ public class MainActivity extends ActionBarActivity {
     public MainActivity() {
     }
 
-    //private Context mContext;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-//        mContext = this;
-
+        mContext = this;
+        //L.d("onCreate");
         initDrawerLayout();
         initDrawerList();
         initContentLayout();
@@ -125,18 +126,29 @@ public class MainActivity extends ActionBarActivity {
 
         mRecyclerView.setHasFixedSize(true);
         StaggeredGridLayoutManager mStaggeredGridLayoutManager =new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        if( getScreenOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+            mStaggeredGridLayoutManager.setSpanCount(2);
+        } else if( getScreenOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            mStaggeredGridLayoutManager.setSpanCount(3);
+        }
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
 
 //        mAdapter = new MyAdapter(this, ShareDoc.getInstance().getShareDetailArray());
-        mAdapter = new MyAdapter(this,  new ArrayList<ShareDetail>());
+        mAdapter = new ShareListAdapter(this,  new ArrayList<ShareDetail>());
         mAdapter.addOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                try {
-//                    int pos = (int)view.getTag();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    //int pos = (int)view.getTag();
+                    //L.d("onClick pos=" + pos);
+                    //L.d("pos=" + mAdapter.getItem(pos).picUrlArray.size());
+
+//                    Intent intent = new Intent(mContext, DisplayPicActivity.class);
+//                    intent.putExtra("picUrlArray", mAdapter.getItem(pos).picUrlArray);
+//                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -146,6 +158,19 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+    private int getScreenOrientation() {
+        //L.d("this.getRequestedOrientation()=" + this.getRequestedOrientation());
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        // 取得螢幕顯示的資料
+        int ScreenWidth = dm.widthPixels;
+        int ScreenHeight = dm.heightPixels;
+        // 螢幕寬和高的Pixels
+        if (ScreenHeight > ScreenWidth) {
+            return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        } else {
+            return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        }
+    }
 
     //要開thread呼叫網路資料不然4.0以後，會回NetworkOnMainThreadException
     Thread getShareDetailArray_thread = new Thread(new Runnable(){

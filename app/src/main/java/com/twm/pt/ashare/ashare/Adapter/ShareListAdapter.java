@@ -7,7 +7,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.twm.pt.ashare.ashare.ImageViewHelper;
 import com.twm.pt.ashare.ashare.R;
 import com.twm.pt.ashare.ashare.component.ShareDetail;
 
@@ -28,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Created by TangWen on 2015/3/23.
  */
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.ViewHolder> {
 
     private ArrayList<ShareDetail> shareDetailArray;
     private Context mContext;
@@ -52,7 +49,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public LinearLayout mInfoLayout;
         public FrameLayout idhr;
 
-        public PicAdapter picAdapter;
+        public PicListAdapter picListAdapter;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
@@ -97,8 +94,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
             StaggeredGridLayoutManager mStaggeredGridLayoutManager =new StaggeredGridLayoutManager(1, LinearLayoutManager.HORIZONTAL);
             mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
-            picAdapter = new PicAdapter(mContext, new ArrayList<String>());
-            mRecyclerView.setAdapter(picAdapter);
+            picListAdapter = new PicListAdapter(mContext, new ArrayList<String>());
+            mRecyclerView.setAdapter(picListAdapter);
         }
 
         @Override
@@ -118,14 +115,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(Context context, ArrayList<ShareDetail> shareDetailArray) {
+    public ShareListAdapter(Context context, ArrayList<ShareDetail> shareDetailArray) {
         mContext = context;
         this.shareDetailArray = shareDetailArray;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ShareListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.share_list, parent, false);
         // set the view's size, margins, paddings and layout parameters
@@ -136,7 +133,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(MyAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ShareListAdapter.ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
@@ -146,8 +143,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.mText2View.setText("by " + mShareDetail.shareName);
         holder.mText3View.setText("  (" + mShareDetail.shareDate + ")");
         holder.mText4View.setText(mShareDetail.description);
-        holder.picAdapter.setPicUrlArray(mShareDetail.picUrlArray);
-        holder.picAdapter.notifyDataSetChanged();
+        holder.picListAdapter.setPicUrlArray(mShareDetail.picUrlArray);
+        holder.picListAdapter.notifyDataSetChanged();
         if(mShareDetail.documentUrl!=null) {
             holder.mButton1.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.download1, 0, 0, 0);
         } else {
@@ -202,5 +199,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     public void setShareDetailArray(ArrayList<ShareDetail> shareDetailArray) {
         this.shareDetailArray = shareDetailArray;
+    }
+
+    public ShareDetail getItem(int pos) {
+        if(pos>=shareDetailArray.size()) return null;
+        return shareDetailArray.get(pos);
     }
 }

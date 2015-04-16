@@ -1,4 +1,4 @@
-package com.twm.pt.ashare.ashare;
+package com.twm.pt.ashare.ashare.utility;
 
 import android.content.Context;
 import android.graphics.Bitmap;
